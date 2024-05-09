@@ -2,10 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChevronDownMini } from "@medusajs/icons";
-import { ProductTag } from "@medusajs/medusa";
 import { useAdminCreateBatchJob, useAdminCreateCollection } from "medusa-react";
 
-import Fade from "../../../components/atoms/fade-wrapper";
 import Spacer from "../../../components/atoms/spacer";
 import Button from "../../../components/fundamentals/button";
 import ExportIcon from "../../../components/fundamentals/icons/export-icon";
@@ -18,13 +16,11 @@ import ExportModal from "../../../components/organisms/export-modal";
 import AddCollectionModal from "../../../components/templates/collection-modal";
 import CollectionsTable from "../../../components/templates/collections-table";
 import ProductTable from "../../../components/templates/product-table";
-import ProductTagModal from "../../../components/templates/product-tag-modal";
 import useNotification from "../../../hooks/use-notification";
 import useToggleState from "../../../hooks/use-toggle-state";
 import { usePolling } from "../../../providers/polling-provider";
 import { getErrorMessage } from "../../../utils/error-messages";
 import ImportProducts from "../batch-job/import";
-import NewProduct from "../new";
 
 import { useProductTableActions } from "./actions";
 
@@ -37,22 +33,6 @@ const Overview = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [view, setView] = useState<View>("products");
-  const [editTag, setEditTag] = useState<ProductTag | null>(null);
-  const {
-    state: createProductState,
-    close: closeProductCreate,
-    open: openProductCreate,
-  } = useToggleState(
-    !location.search.includes("view=collections") &&
-      location.search.includes("modal=new")
-  );
-
-  const {
-    open: openTagModal,
-    close: closeTagModal,
-    state: tagModalState,
-  } = useToggleState();
-
   const [bulkSelectedIds, setBulkSelectedIds] = useState<string[]>([]);
 
   const actionables = useProductTableActions({ productIds: bulkSelectedIds });
@@ -120,14 +100,6 @@ const Overview = () => {
             >
               <ExportIcon size={20} className="hidden small:block" />
               {t("overview-export-products", "Export Products")}
-            </Button>
-            <Button
-              variant="secondary"
-              size="small"
-              onClick={openProductCreate}
-            >
-              <PlusIcon size={20} className="hidden small:block" />
-              {t("overview-new-product", "New Product")}
             </Button>
           </div>
         );
@@ -253,13 +225,6 @@ const Overview = () => {
           <Spacer />
         </div>
       </div>
-      {tagModalState && (
-        <ProductTagModal
-          onClose={closeTagModal}
-          isEdit={!!editTag}
-          tag={editTag}
-        />
-      )}
       {showNewCollection && (
         <AddCollectionModal
           onClose={() => setShowNewCollection(!showNewCollection)}
@@ -277,9 +242,6 @@ const Overview = () => {
       {importModalOpen && (
         <ImportProducts handleClose={() => closeImportModal()} />
       )}
-      <Fade isVisible={createProductState} isFullScreen={true}>
-        <NewProduct onClose={closeProductCreate} />
-      </Fade>
     </>
   );
 };

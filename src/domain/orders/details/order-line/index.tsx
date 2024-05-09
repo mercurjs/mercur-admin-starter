@@ -5,6 +5,7 @@ import ImagePlaceholder from "../../../../components/fundamentals/image-placehol
 import { useFeatureFlag } from "../../../../providers/feature-flag-provider";
 import { formatAmountWithSymbol } from "../../../../utils/prices";
 import ReservationIndicator from "../../components/reservation-indicator/reservation-indicator";
+import { useNavigate } from "react-router-dom";
 
 type OrderLineProps = {
   item: LineItem;
@@ -22,6 +23,11 @@ const OrderLine = ({
   shippingMethods,
 }: OrderLineProps) => {
   const { isFeatureEnabled } = useFeatureFlag();
+  const navigate = useNavigate();
+
+  const handleRedirect = () => {
+    navigate(`/a/products/${item.variant.product.id}`);
+  };
 
   const shippingPrice =
     shippingMethods &&
@@ -29,7 +35,10 @@ const OrderLine = ({
     shippingMethods?.find((el) => el.data.line_item_id === item.id)?.price;
 
   return (
-    <div className="hover:bg-grey-5 rounded-rounded mx-[-5px] mb-1 flex min-h-[64px] justify-between py-2 px-[5px]">
+    <div
+      className="hover:bg-grey-5 rounded-rounded mx-[-5px] mb-1 flex min-h-[64px] justify-between py-2 px-[5px] cursor-pointer"
+      onClick={handleRedirect}
+    >
       <div>
         <p className="text-small text-ui-fg-subtle py-2 pl-0.5">
           Seller: <span>{item.variant.product.store.name}</span>
