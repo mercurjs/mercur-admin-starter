@@ -1,4 +1,4 @@
-# Rigby Marketplace [Admin Application]
+# Mercur Marketplace [Admin Application]
 
 Learn More about Medusa.js [here](https://docs.medusajs.com/)
 
